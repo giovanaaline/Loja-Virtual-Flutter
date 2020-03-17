@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "212019596436",
+    "firebase_url": "https://loja-virtual-flutter-20237.firebaseio.com",
+    "project_id": "loja-virtual-flutter-20237",
+    "storage_bucket": "loja-virtual-flutter-20237.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:212019596436:android:de1a836b267c651b4df881",
+        "android_client_info": {
+          "package_name": "br.com.giovanaaline.lojavirtual"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "212019596436-8ffhj1t8v9gduevah5f47b2knevpkulk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBO1vLGKjkoGsXaq8Gr-ay6Cfe3_YfnMBU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "212019596436-8ffhj1t8v9gduevah5f47b2knevpkulk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
