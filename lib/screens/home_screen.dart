@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lojavirtual/tabs/home_tab.dart';
 
 class HomeScreen extends StatelessWidget {
   final _pageController = PageController();
@@ -7,7 +8,9 @@ class HomeScreen extends StatelessWidget {
     return PageView(
       controller: _pageController,
       physics: NeverScrollableScrollPhysics(), //para não deslizar com o dedo (arrastar)
-      children: <Widget>[],
+      children: <Widget>[
+        HomeTab()
+      ],
     );
   }
 }
