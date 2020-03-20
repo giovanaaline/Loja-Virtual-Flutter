@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lojavirtual/tabs/home_tab.dart';
+import 'package:lojavirtual/tabs/products_tab.dart';
 import 'package:lojavirtual/widgets/custom_drawer.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -14,26 +15,10 @@ class HomeScreen extends StatelessWidget {
           body: HomeTab(),
           drawer: CustomDrawer(_pageController),
         ),
-        Container(color: Colors.red,
-          child: GestureDetector(
-            onTap: (){
-              _pageController.jumpToPage(0);
-            },
-          ),
-        ),
-        Container(color: Colors.green,
-          child: GestureDetector(
-            onTap: (){
-              _pageController.jumpToPage(0);
-            },
-          ),
-        ),
-        Container(color: Colors.blue,
-          child: GestureDetector(
-            onTap: (){
-              _pageController.jumpToPage(0);
-            },
-          ),
+        Scaffold(
+          appBar: AppBar(title: Text("Produtos"), centerTitle: true),
+          drawer: CustomDrawer(_pageController),
+          body: ProductsTab(),
         )
       ],
     );
