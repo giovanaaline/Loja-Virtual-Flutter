@@ -12,7 +12,28 @@ class HomeScreen extends StatelessWidget {
       children: <Widget>[
         Scaffold(
           body: HomeTab(),
-          drawer: CustomDrawer(),
+          drawer: CustomDrawer(_pageController),
+        ),
+        Container(color: Colors.red,
+          child: GestureDetector(
+            onTap: (){
+              _pageController.jumpToPage(0);
+            },
+          ),
+        ),
+        Container(color: Colors.green,
+          child: GestureDetector(
+            onTap: (){
+              _pageController.jumpToPage(0);
+            },
+          ),
+        ),
+        Container(color: Colors.blue,
+          child: GestureDetector(
+            onTap: (){
+              _pageController.jumpToPage(0);
+            },
+          ),
         )
       ],
     );
