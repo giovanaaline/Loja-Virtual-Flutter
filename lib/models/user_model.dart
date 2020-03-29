@@ -11,6 +11,13 @@ class UserModel extends Model {
   FirebaseUser firebaseUser;
   Map<String, dynamic> userData = Map();
 
+
+  @override
+  void addListener(VoidCallback listener) {
+    super.addListener(listener);
+      _loadCurrentUSer();
+  }
+
   void signUp(Map<String, dynamic> userData, String pass, VoidCallback onSuccess, VoidCallback onFail) {
     isLoading = true;
     notifyListeners();
@@ -30,16 +37,32 @@ class UserModel extends Model {
     });
   }
 
-  void singIn() async {
+  void singIn(String email, String pass, VoidCallback onSuccess, VoidCallback onFail) async {
     isLoading = true;
     notifyListeners(); //notifica quem está dentro do ScopedModel em outros lugares
-    await Future.delayed(Duration(seconds: 3));
 
-    isLoading = false;
-    notifyListeners();
+    _auth.signInWithEmailAndPassword(email: email, password: pass).then((result) {
+      firebaseUser = result.user;
+      _loadCurrentUSer();
+
+      onSuccess();
+      isLoading = false;
+      notifyListeners();
+
+    }).catchError((e){
+
+      onFail();
+      isLoading = false;
+      notifyListeners();
+    });
   }
 
-  void recoverPass() {
+  void recoverPass(String email) {
+    _auth.sendPasswordResetEmail(email: email).then((result){
+    //  print(result);
+    }).catchError((e){
+    //  print(e);
+    });
   }
 
   void signOut(){
@@ -49,12 +72,24 @@ class UserModel extends Model {
     notifyListeners();
   }
 
-  bool isLoggeedIn() {
+  bool isLoggedIn() {
     return firebaseUser != null;
   }
 
   Future<Null> _saveUserData(Map<String, dynamic> userData) async{
     this.userData = userData;
     await Firestore.instance.collection('users').document(firebaseUser.uid).setData(userData);
+  }
+
+  Future<Null> _loadCurrentUSer() async{
+    if (firebaseUser == null)
+      firebaseUser = await _auth.currentUser();
+    else{
+      if (userData['name'] == null){
+        DocumentSnapshot docUser = await Firestore.instance.collection('users').document(firebaseUser.uid).get();
+        userData = docUser.data;
+      }
+    }
+    notifyListeners();
   }
 }
