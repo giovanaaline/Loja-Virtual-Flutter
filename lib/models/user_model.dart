@@ -11,6 +11,8 @@ class UserModel extends Model {
   FirebaseUser firebaseUser;
   Map<String, dynamic> userData = Map();
 
+  static UserModel of(BuildContext context) => ScopedModel.of<UserModel>(context);
+
 
   @override
   void addListener(VoidCallback listener) {
@@ -82,8 +84,11 @@ class UserModel extends Model {
   }
 
   Future<Null> _loadCurrentUSer() async{
-    if (firebaseUser == null)
+    if (firebaseUser == null) {
       firebaseUser = await _auth.currentUser();
+      DocumentSnapshot docUser = await Firestore.instance.collection('users').document(firebaseUser.uid).get();
+      userData = docUser.data;
+    }
     else{
       if (userData['name'] == null){
         DocumentSnapshot docUser = await Firestore.instance.collection('users').document(firebaseUser.uid).get();
