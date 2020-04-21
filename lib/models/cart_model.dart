@@ -54,5 +54,69 @@ class CartModel extends Model{
   void setCoupon(String couponCode, int discountPercentage){
     this.couponCode = couponCode;
     this.discountPercentage = discountPercentage;
+    notifyListeners();
+  }
+
+  double getProductsPrice(){
+    double price = 0.0;
+    for (CartProduct c in products){
+      if (c.productData != null){
+        price += c.quantity * c.productData.price;
+      }
+    }
+    return price;
+  }
+
+  double getDiscount(){
+    return getProductsPrice() * discountPercentage / 100;
+  }
+
+  double getShipPrice(){
+    return 9.99;
+  }
+
+  void updatePrice(){
+    notifyListeners();
+  }
+
+  Future<String> finishedOrder() async{
+    if (products.length == 0) return null;
+    isLoading = true;
+    notifyListeners();
+
+    double productsPrice = getProductsPrice();
+    double shipPrice = getShipPrice();
+    double discount = getDiscount();
+//grava os pedidos na coleção orders
+    DocumentReference docRef = await Firestore.instance.collection('orders').add({
+      'clientId': user.firebaseUser.uid,
+      'discount': discount,
+      'shipPrice': shipPrice,
+      'productsPrice': productsPrice,
+      'totalOrder': productsPrice - discount + shipPrice,
+      'status': 1,
+      'dataOrder': new DateTime.now(),
+      'products': products.map((cartProduct) => cartProduct.toMap()).toList()
+    });
+
+//    grava para o usuário a referencia do seu pedido
+    await Firestore.instance.collection('users').document(user.firebaseUser.uid).
+    collection('orders').document(docRef.documentID).setData({'orderId':docRef.documentID});
+
+//    apaga os produtos do carrinho pois a compra foi feita
+    QuerySnapshot query = await loadDataCart().getDocuments();
+    for (DocumentSnapshot doc in query.documents){
+      doc.reference.delete();
+    }
+
+//    limpa os produtos
+    products.clear();
+
+    couponCode = null;
+    discountPercentage = 0;
+    isLoading = false;
+    notifyListeners();
+
+    return docRef.documentID;
   }
 }
